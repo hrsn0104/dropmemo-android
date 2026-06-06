@@ -18,7 +18,9 @@
             android:name=".IncomingTextActivity"
             android:excludeFromRecents="true"
             android:exported="true"
+            android:finishOnTaskLaunch="true"
             android:label="@string/process_text_label"
+            android:launchMode="singleTask"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoDisplay">
             <intent-filter android:label="@string/process_text_label">
