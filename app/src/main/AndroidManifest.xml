@@ -22,6 +22,7 @@
             android:label="@string/process_text_label"
             android:launchMode="singleTask"
             android:noHistory="true"
+            android:taskAffinity="com.dropmemo.incoming"
             android:theme="@style/AppTheme.NoDisplay">
             <intent-filter android:label="@string/process_text_label">
                 <action android:name="android.intent.action.PROCESS_TEXT" />

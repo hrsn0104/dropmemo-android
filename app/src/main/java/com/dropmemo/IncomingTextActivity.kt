@@ -116,6 +116,7 @@ class IncomingTextActivity : Activity() {
     }
 
     private fun closeHandlerActivity() {
+        moveTaskToBack(true)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             finishAndRemoveTask()
         } else {
