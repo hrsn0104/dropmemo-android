@@ -37,6 +37,12 @@ class MainActivity : Activity() {
     private var folderUri: Uri? = null
     private var saveCount: Int = 0
 
+    private val preferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == KEY_FOLDER_URI || key == KEY_SAVE_COUNT) {
+            syncFileStateFromPreferences()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -48,6 +54,21 @@ class MainActivity : Activity() {
         updateFolderStatus()
         refreshPreview()
         handleIncomingIntent(intent)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        syncFileStateFromPreferences()
+    }
+
+    override fun onStop() {
+        prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
+        super.onStop()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -171,6 +192,15 @@ class MainActivity : Activity() {
         vaultEdit.setText(prefs.getString(KEY_VAULT_NAME, ""))
         filePathEdit.setText(prefs.getString(KEY_FILE_PATH, "00_Inbox/DropMemo"))
         updateSaveCountText()
+    }
+
+    private fun syncFileStateFromPreferences() {
+        if (!::previewText.isInitialized) return
+        folderUri = prefs.getString(KEY_FOLDER_URI, null)?.let(Uri::parse)
+        saveCount = prefs.getInt(KEY_SAVE_COUNT, 0)
+        updateFolderStatus()
+        updateSaveCountText()
+        refreshPreview()
     }
 
     private fun addPreferenceWatchers() {
